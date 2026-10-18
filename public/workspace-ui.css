@@ -1,0 +1,59 @@
+/* Shared workspace content primitives for Blade and client-rendered screens. */
+:root{--workspace-accent:#176b59;--workspace-ink:#182b28;--workspace-muted:#74817c;--workspace-border:#e0e9e5;--workspace-soft:#edf6f1;--workspace-radius:10px}
+.workspace-loading{max-width:440px;margin:12vh auto;padding:28px;background:white;border:1px solid var(--workspace-border);border-radius:10px;text-align:center;color:var(--workspace-ink)}.workspace-loading p{font-size:13px;margin:12px 0;color:var(--workspace-muted)}.workspace-loading button{border:1px solid var(--workspace-border);border-radius:7px;background:var(--workspace-accent);color:white;padding:9px 14px;cursor:pointer}
+:is(.content,.management-content){color:var(--workspace-ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-size:13px;line-height:1.5;min-width:0}
+:is(.content,.management-content) :is(.card,.panel,.t-results,.profile-section){border:1px solid var(--workspace-border);border-radius:var(--workspace-radius);background:#fff;box-shadow:none;min-width:0}
+:is(.content,.management-content) :is(.card-head,.card-body){padding:16px 18px}
+.management-content .panel{padding:16px 18px}
+.management-content :is(.agreement-card,.agreement-template-library,.agreement-tools .panel){padding:0}
+:is(.content,.management-content) :is(h1,.heading h1){font-size:25px;line-height:1.25;letter-spacing:-.7px;font-weight:650}
+:is(.content,.management-content) :is(h2,.card-head h2){font-size:15px;line-height:1.4;font-weight:650}
+:is(.content,.management-content) :is(.btn,.button,button.primary){display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:34px;padding:7px 12px;border:1px solid var(--workspace-border);border-radius:7px;background:#fff;color:var(--workspace-accent);font-size:12px;font-weight:600;line-height:1.4;text-decoration:none}
+:is(.content,.management-content) :is(.btn.primary,.button.primary,button.primary){background:var(--workspace-accent);border-color:var(--workspace-accent);color:#fff}
+:is(.content,.management-content) :is(input:not([type=checkbox]):not([type=radio]):not([type=file]),select,textarea){border:1px solid var(--workspace-border);border-radius:7px;background:#fff;color:var(--workspace-ink);font:inherit;min-width:0;max-width:100%}
+:is(.content,.management-content) :is(select,input:not([type=checkbox]):not([type=radio]):not([type=file])){min-height:36px}
+:is(.content,.management-content) :is(.field,.t-field){font-size:11px;font-weight:550;gap:6px}
+:is(.content,.management-content) :is(.badge,.tag,.t-pill){border-radius:5px;font-size:10px;line-height:1.4}
+:is(.content,.management-content) :is(.form-grid,.columns,.grid,.profile-facts)>*{min-width:0}
+:is(.content,.management-content) :is(td,dd,.profile-identity,.heading>div){overflow-wrap:anywhere}
+:is(.content,.management-content) :is(button,a,input,select,textarea,summary):focus-visible{outline:2px solid var(--workspace-accent);outline-offset:3px}
+.management-account button svg{width:18px;height:18px;fill:none;stroke:currentColor}
+.t-core-filters{display:grid;gap:9px;padding:12px 0 14px;border-bottom:1px solid var(--workspace-border)}
+.t-core-filters h3{font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:var(--workspace-muted);margin:0}
+.t-core-filters .t-field{margin:0;display:grid;gap:5px}
+.t-core-filters select{width:100%;padding:7px 8px;font-size:11px}
+.t-core-pair{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+.t-core-filters .t-field select{margin:0}
+:is(.content,.management-content) :is(.t-global-search,.t-facet-search,.search) input{border:0;border-radius:0;background:transparent;box-shadow:none}
+:is(.content,.management-content) :is(th,td){font-size:11px;line-height:1.45;padding:11px 12px}
+:is(.content,.management-content) th{font-size:10px;color:var(--workspace-muted);font-weight:600}
+.t-filter-group .t-chevron{font-size:0;display:block;width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);margin:0 3px}
+.t-filter-group[open] .t-chevron{transform:rotate(225deg)}
+.content .talent-explorer .t-discovery-layout{grid-template-columns:224px minmax(0,1fr);gap:12px}
+.content .talent-explorer .t-discovery-layout.compact{grid-template-columns:minmax(0,1fr)}
+.content .talent-explorer .t-filters{display:flex;flex-direction:column;max-height:calc(100dvh - 210px);position:sticky;top:16px;border-color:var(--workspace-border);border-radius:10px}
+.content .talent-explorer .t-filter-header{padding:12px 14px;flex:none}
+.content .talent-explorer .t-filter-header p{display:none}
+.content .talent-explorer .t-filter-scroll{flex:1;max-height:none;min-height:0;padding:0 14px;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+.content .talent-explorer .t-core-filters{gap:8px;padding:12px 0}
+.content .talent-explorer .t-core-filters h3{font-size:9px;letter-spacing:.7px}
+.content .talent-explorer .t-core-pair{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.content .talent-explorer .t-core-filters .t-field{font-size:10px;color:#60796e;font-weight:500;gap:4px}
+.content .talent-explorer .t-core-filters select{font-size:11px;font-weight:400;min-height:32px;padding:5px 7px;border-radius:6px;background:#fafcfb}
+.content .talent-explorer .t-filter-group>summary{padding:11px 0;font-size:11px}
+.content .talent-explorer .t-filter-footer{flex:none;padding:9px 12px;background:#fff}
+.content .talent-explorer .t-filter-footer .primary{display:none}
+.content .talent-explorer .t-filter-footer .btn{min-height:30px;font-size:11px;padding:5px 9px}
+.content .talent-explorer .t-global-search{height:40px;padding:0 12px;gap:10px;border:1px solid var(--workspace-border);box-shadow:none;min-width:0}
+.content .talent-explorer .t-global-search:focus-within{border-color:#74ad9d;box-shadow:0 0 0 3px #176b590b}
+.content .talent-explorer .t-global-search input:not([type=checkbox]):not([type=radio]):not([type=file]){border:0;border-radius:0;outline:0;background:transparent;box-shadow:none;padding:0;margin:0;min-height:0;height:100%;font-size:12px;font-weight:400;width:100%}
+.content .talent-explorer .t-global-search kbd{border:0;padding:0;color:#94a39b;font-size:9px;flex:none}
+.content .talent-explorer .t-sort select{font-size:11px;font-weight:400;min-width:120px;max-width:145px;min-height:30px;padding:4px 8px;background:#fff}
+.content .talent-explorer .t-result-toolbar .btn{font-size:11px;min-height:30px;padding:5px 9px}
+.content .talent-explorer .t-table td{padding:8px 10px;height:48px;font-size:11px}
+.content .talent-explorer .t-table th{padding:8px 10px;height:33px;font-size:9px}
+.content .talent-explorer .t-table-scroll{max-height:calc(100dvh - 260px)}
+.content .talent-explorer .t-scope-row{margin-bottom:10px}
+.content .talent-explorer .t-saved select{font-size:11px;min-height:30px;padding:5px 8px;background:#fff}
+@media(max-width:900px){.content .talent-explorer .t-discovery-layout{display:block}.content .talent-explorer .t-filters{display:none;max-height:none}.content .talent-explorer .t-filters.open{display:flex;position:fixed;inset:0 auto 0 0;width:min(340px,92vw);height:100dvh;border-radius:0;z-index:75}.content .talent-explorer .t-filter-scroll{max-height:none}.content .talent-explorer .t-filter-footer .primary{display:inline-flex}.content .talent-explorer .t-table-scroll{max-height:none}}
+@media(max-width:650px){:is(.content,.management-content) :is(.card-head,.card-body){padding:14px}.management-content .panel{padding:14px}.management-content :is(.agreement-card,.agreement-template-library,.agreement-tools .panel){padding:0}:is(.content,.management-content) h1{font-size:23px}.t-core-pair{grid-template-columns:repeat(2,minmax(0,1fr))}}

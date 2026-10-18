@@ -1,0 +1,26 @@
+<?php
+return [
+    'recaptcha_site_key' => env('RECAPTCHA_SITE_KEY'),
+    'recaptcha_secret_key' => env('RECAPTCHA_SECRET_KEY'),
+    'services' => [
+        'Translation' => ['source' => 'Source language', 'target' => 'Target language', 'speciality' => 'Translation specialities and tools'],
+        'Interpretation' => ['languages' => 'Working languages', 'mode' => 'Consecutive, simultaneous or remote', 'setting' => 'Events and settings you interpret in'],
+        'Localization' => ['languages' => 'Source and target languages', 'products' => 'Products you localize', 'tools' => 'Localization tools'],
+        'Back Translation' => ['languages' => 'Source and target languages', 'process' => 'Back-translation and verification process', 'speciality' => 'Relevant industries'],
+        'Content Creation' => ['language' => 'Writing languages', 'formats' => 'Content formats', 'portfolio' => 'Portfolio link or sample description'],
+        'Software/Game Testing' => ['platforms' => 'Platforms and devices', 'testing' => 'Testing methods', 'tools' => 'Testing tools'],
+        'Consultancy' => ['focus' => 'Consultancy focus', 'clients' => 'Projects and clients you support', 'approach' => 'How you deliver advice'],
+        'Language Teaching' => ['languages' => 'Languages taught', 'learners' => 'Learner levels and ages', 'delivery' => 'Online, in-person or group delivery'],
+        'AI Training' => ['tasks' => 'Annotation and training tasks', 'languages' => 'Working languages', 'quality' => 'Quality assurance approach'],
+        'Proof Reading' => ['languages' => 'Proofreading languages', 'materials' => 'Types of materials', 'process' => 'Review process and style guides'],
+        'Subtitling' => ['languages' => 'Source and target languages', 'tools' => 'Subtitling tools', 'formats' => 'File formats and accessibility work'],
+        'Transcreation' => ['languages' => 'Source and target languages', 'markets' => 'Markets and brands', 'portfolio' => 'Campaign examples or portfolio'],
+        'Editing' => ['languages' => 'Editing languages', 'editing' => 'Copy, structural or developmental editing', 'materials' => 'Materials and style guides'],
+        'Transcription' => ['languages' => 'Transcription languages', 'audio' => 'Audio and subject types', 'formats' => 'Verbatim, clean read and output formats'],
+        'LQA' => ['languages' => 'Languages assessed', 'frameworks' => 'Quality frameworks and error taxonomy', 'tools' => 'Review tools'],
+        'Voice Over' => ['languages' => 'Languages and accents', 'voice' => 'Voice styles and demo link', 'studio' => 'Recording setup'],
+        'Data Collection' => ['types' => 'Data types collected', 'methods' => 'Collection methods', 'consent' => 'Consent and privacy process'],
+        'Any Other' => ['service' => 'Service name', 'description' => 'What you offer', 'examples' => 'Experience or examples'],
+    ],
+    'domains' => ['General','Legal','Medical','Healthcare','Life sciences','Education','Social sciences','Technical','Patent','Marketing','Business','Finance','E-commerce','Gaming','Crypto','Sports','Transport','Tourism','Beauty','Fashion','Aviation','IT','Software','UI/UX','Telecom','Social media','Media','Movies & dramas','Religion','Fiction'],
+];
