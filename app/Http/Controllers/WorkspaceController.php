@@ -51,6 +51,7 @@ class WorkspaceController extends Controller
         return view('workspace', ['workspace' => [
             'demo' => false,
             'role' => 'admin',
+            'notice' => session('notice'),
             'name' => $request->user()->name,
             'user_id' => $request->user()->id,
             'csrf' => csrf_token(),
@@ -98,7 +99,7 @@ class WorkspaceController extends Controller
         $path = $application->profile['profile_image_path'] ?? null;
         abort_unless($path && Storage::disk('local')->exists($path), 404);
 
-        return response()->file(Storage::disk('local')->path($path), ['Cache-Control' => 'private, no-store', 'X-Content-Type-Options' => 'nosniff']);
+        return response(Storage::disk('local')->get($path), 200, ['Content-Type' => 'image/jpeg', 'Cache-Control' => 'private, no-store', 'X-Content-Type-Options' => 'nosniff']);
     }
 
     public function saveProfessionalProfile(Request $request)

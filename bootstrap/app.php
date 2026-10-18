@@ -12,9 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->trimStrings(except: ['smtp_password', 'recaptcha_secret_key']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->dontFlash(['smtp_password', 'recaptcha_secret_key', 'password']);
         $exceptions->render(function (\Illuminate\Routing\Exceptions\InvalidSignatureException $error, Request $request) {
             if ($request->is('apply/services/*') || $request->is('onboarding/*')) {
                 return response()->view('talent.expired', [], 403);

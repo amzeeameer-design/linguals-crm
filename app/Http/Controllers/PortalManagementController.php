@@ -51,7 +51,7 @@ class PortalManagementController extends Controller
         $job = DB::table('failed_jobs')->where('uuid', $d['id'])->first();
         abort_unless($job, 404);
         $payload = json_decode($job->payload, true);
-        abort_unless(in_array($payload['displayName'] ?? '', [SendTalentStageEmail::class, \App\Jobs\AssessDocument::class], true), 422, 'Only supported applicant email and document assessment jobs can be retried here.');
+        abort_unless(in_array($payload['displayName'] ?? '', [SendTalentStageEmail::class, \App\Jobs\AssessDocument::class, \App\Jobs\PurgeApplicantFiles::class], true), 422, 'Only supported applicant email and document assessment jobs can be retried here.');
         Artisan::call('queue:retry', ['id' => [$d['id']]]);
         PortalSettings::audit('email_delivery_retried', ['job' => $d['id']]);
 
@@ -64,19 +64,35 @@ class PortalManagementController extends Controller
         $masked = $s;
         unset($masked['smtp_password'],$masked['recaptcha_secret_key']);
 
-        return view('management.settings', ['settings' => $masked, 'hasPassword' => ! empty($s['smtp_password']), 'hasCaptchaSecret' => ! empty($s['recaptcha_secret_key']), 'templates' => PortalSettings::templates(), 'audit' => DB::table('portal_audit')->latest()->limit(20)->get(), 'failed' => DB::table('failed_jobs')->count(), 'pending' => DB::table('jobs')->count(), 'failedDeliveries' => DB::table('failed_jobs')->select('uuid', 'payload', 'failed_at')->latest('id')->limit(20)->get()->filter(fn ($j) => in_array(json_decode($j->payload, true)['displayName'] ?? '', [SendTalentStageEmail::class, \App\Jobs\AssessDocument::class], true))]);
+        return view('management.settings', ['settings' => $masked, 'smtpTest' => PortalSettings::read('smtp_test'), 'hasPassword' => ! empty($s['smtp_password']), 'hasCaptchaSecret' => ! empty($s['recaptcha_secret_key']), 'templates' => PortalSettings::templates(), 'audit' => DB::table('portal_audit')->latest()->limit(20)->get(), 'failed' => DB::table('failed_jobs')->count(), 'pending' => DB::table('jobs')->count(), 'failedDeliveries' => DB::table('failed_jobs')->select('uuid', 'payload', 'failed_at')->latest('id')->limit(20)->get()->filter(fn ($j) => in_array(json_decode($j->payload, true)['displayName'] ?? '', [SendTalentStageEmail::class, \App\Jobs\AssessDocument::class, \App\Jobs\PurgeApplicantFiles::class], true))]);
     }
 
     public function saveSettings(Request $r)
     {
         $d = $r->validate(['smtp_host' => 'nullable|string|max:254', 'smtp_port' => 'required|in:587,465,25,2525', 'smtp_encryption' => 'required|in:tls,ssl', 'smtp_username' => 'nullable|string|max:254', 'smtp_password' => 'nullable|string|max:1000', 'from_email' => 'required|email|max:254', 'from_name' => 'required|string|max:120', 'recaptcha_site_key' => 'nullable|string|max:500', 'recaptcha_secret_key' => 'nullable|string|max:500', 'location_enabled' => 'nullable|boolean']);
+        $d['smtp_host'] = trim((string) ($d['smtp_host'] ?? ''));
+        if ($d['smtp_host'] !== '' && ! preg_match('/^[a-zA-Z0-9.-]+$/', $d['smtp_host'])) {
+            throw ValidationException::withMessages(['smtp_host' => 'Enter the mail server hostname only, without https://, ssl:// or a port.']);
+        }
+        if ((int) $d['smtp_port'] === 465 && $d['smtp_encryption'] !== 'ssl') {
+            throw ValidationException::withMessages(['smtp_encryption' => 'Port 465 uses SSL. Choose SSL, or use port 587 with TLS / STARTTLS.']);
+        }
         $existing = PortalSettings::read('integrations');
         foreach (['smtp_password', 'recaptcha_secret_key'] as $key) {
             if (empty($d[$key])) {
                 $d[$key] = $existing[$key] ?? null;
             }
         }$d['location_enabled'] = $r->boolean('location_enabled');
+        $mailKeys = array_flip(['smtp_host', 'smtp_port', 'smtp_encryption', 'smtp_username', 'smtp_password', 'from_email', 'from_name']);
+        if (array_intersect_key($existing, $mailKeys) != array_intersect_key($d, $mailKeys)) {
+            PortalSettings::write('smtp_test', []);
+        }
         PortalSettings::write('integrations', $d);
+        PortalSettings::apply();
+        Mail::purge('smtp');
+        if ($r->input('intent') === 'test') {
+            return $this->testSmtp($r);
+        }
         PortalSettings::audit('settings_updated', ['fields' => array_keys($d)]);
 
         return back()->with('notice', 'Integration settings saved. Secret values are encrypted.');
@@ -116,11 +132,13 @@ class PortalManagementController extends Controller
             Mail::purge('smtp');
             Mail::raw('Your Linguals SMTP connection is working.', fn ($m) => $m->to($d['recipient'])->subject('The Linguals SMTP test'));
         } catch (\Throwable $e) {
-            report($e);
-            throw ValidationException::withMessages(['recipient' => 'SMTP delivery failed. Check the credentials, sender and hosting mail restrictions.']);
-        }PortalSettings::audit('smtp_test_sent', ['recipient' => $d['recipient']]);
+            PortalSettings::write('smtp_test', ['status' => 'failed', 'message' => \App\Services\SmtpDiagnostics::message($e), 'tested_at' => now()->toIso8601String()]);
+            throw ValidationException::withMessages(['recipient' => \App\Services\SmtpDiagnostics::message($e)]);
+        }
+        PortalSettings::write('smtp_test', ['status' => 'accepted', 'tested_at' => now()->toIso8601String()]);
+        PortalSettings::audit('smtp_test_sent', ['recipient' => $d['recipient']]);
 
-        return back()->with('notice', 'SMTP test sent.');
+        return back()->with('notice', 'SMTP server accepted the test email. Check the recipient inbox and spam folder.');
     }
 
     public function sendEmail(Request $r, TalentApplication $application)

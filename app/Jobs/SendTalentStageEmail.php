@@ -33,7 +33,10 @@ class SendTalentStageEmail implements ShouldQueue
     public function handle(): void
     {
         Cache::lock('portal-mail-'.$this->applicationId, 120)->block(10, function () {
-            $a = TalentApplication::findOrFail($this->applicationId);
+            $a = TalentApplication::find($this->applicationId);
+            if (! $a) {
+                return;
+            }
             $p = $a->profile ?? [];
             if (! empty($p['email_deliveries'][$this->deliveryId])) {
                 return;
