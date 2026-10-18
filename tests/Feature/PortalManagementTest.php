@@ -100,7 +100,7 @@ class PortalManagementTest extends TestCase
         Storage::fake('local');
         $path = PrivateFiles::photo(UploadedFile::fake()->image('profile.png', 2000, 1200));
         $size = getimagesize(Storage::disk('local')->path($path));
-        $this->assertSame(1024, $size[0]);
+        $this->assertSame(1600, $size[0]);
         $this->assertSame('image/jpeg', $size['mime']);
         $bytes = str_repeat('original CV content ', 200000);
         $file = UploadedFile::fake()->createWithContent('cv.pdf', $bytes);

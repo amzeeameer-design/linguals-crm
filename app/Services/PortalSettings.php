@@ -26,7 +26,7 @@ class PortalSettings
     {
         $s = self::read('integrations');
         if (! empty($s['smtp_host'])) {
-            config(['mail.default' => 'smtp', 'mail.mailers.smtp.url' => null, 'mail.mailers.smtp.require_tls' => true, 'mail.mailers.smtp.host' => $s['smtp_host'], 'mail.mailers.smtp.port' => (int) $s['smtp_port'], 'mail.mailers.smtp.scheme' => ($s['smtp_encryption'] ?? 'tls') === 'ssl' ? 'smtps' : 'smtp', 'mail.mailers.smtp.username' => $s['smtp_username'] ?? null, 'mail.mailers.smtp.password' => $s['smtp_password'] ?? null, 'mail.from.address' => $s['from_email'], 'mail.from.name' => $s['from_name'] ?? 'The Linguals']);
+            config(['mail.default' => 'smtp', 'mail.mailers.smtp.url' => null, 'mail.mailers.smtp.require_tls' => true, 'mail.mailers.smtp.auto_tls' => true, 'mail.mailers.smtp.host' => $s['smtp_host'], 'mail.mailers.smtp.port' => (int) $s['smtp_port'], 'mail.mailers.smtp.scheme' => ($s['smtp_encryption'] ?? 'tls') === 'ssl' ? 'smtps' : 'smtp', 'mail.mailers.smtp.username' => $s['smtp_username'] ?? null, 'mail.mailers.smtp.password' => $s['smtp_password'] ?? null, 'mail.from.address' => $s['from_email'], 'mail.from.name' => $s['from_name'] ?? 'The Linguals']);
         }
         foreach (['recaptcha_site_key', 'recaptcha_secret_key'] as $key) {
             if (! empty($s[$key])) {

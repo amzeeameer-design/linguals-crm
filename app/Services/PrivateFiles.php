@@ -64,12 +64,12 @@ class PrivateFiles
         }
         $sourceWidth = imagesx($source);
         $sourceHeight = imagesy($source);
-        $ratio = min(1, 1024 / $sourceWidth, 1024 / $sourceHeight);
+        $ratio = min(1, 1600 / $sourceWidth, 1600 / $sourceHeight);
         $image = imagecreatetruecolor(max(1, (int) round($sourceWidth * $ratio)), max(1, (int) round($sourceHeight * $ratio)));
         imagefill($image, 0, 0, imagecolorallocate($image, 255, 255, 255));
         imagecopyresampled($image, $source, 0, 0, 0, 0, imagesx($image), imagesy($image), $sourceWidth, $sourceHeight);
         ob_start();
-        imagejpeg($image, null, 82);
+        imagejpeg($image, null, 90);
         $bytes = ob_get_clean();
         imagedestroy($source);
         imagedestroy($image);

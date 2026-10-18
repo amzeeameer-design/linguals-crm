@@ -27,6 +27,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::get('/portal', [WorkspaceController::class, 'applicant'])->middleware('auth')->name('portal');
 Route::get('/workspace', [WorkspaceController::class, 'admin'])->middleware(['auth', AdminOnly::class]);
 Route::middleware(['auth', AdminOnly::class])->prefix('admin')->group(function () {
+    Route::post('/applications/{application}/photo', [\App\Http\Controllers\ApplicantDataController::class, 'photo'])->middleware('throttle:10,1');
+    Route::get('/applications/{application}/delete', [\App\Http\Controllers\ApplicantDataController::class, 'confirm']);
+    Route::post('/applications/{application}/delete', [\App\Http\Controllers\ApplicantDataController::class, 'destroy'])->middleware('throttle:5,1');
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/export', [AdminController::class, 'export']);
     Route::get('/applications/{application}', [AdminController::class, 'show'])->name('admin.show');
